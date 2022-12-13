@@ -43,30 +43,32 @@ public String msg;
                         sendResponseTo(msgSplit[1], msgSplit[2], msgSplit[3]);
                         break;
                     case "updateGame":
-                       // sender + position
-                        updateGame(msgSplit[1]);
+                       // sender + position 
+                        updateGame(msgSplit[1], msgSplit[2]);
                         break;
                     case "startGame":
                         //sender +rceiver
-                        startGame();
+                        startGame(msgSplit[1], msgSplit[2]);
                         break;
                     case "quitFromGame":
                         handlePlayerWantToQuit();
                         break;
                          case "playAgain":
-                             //sender +rcever
+                        //sender +rcever
                         handlePlayerWantToQuit();
                         break;
                     case "saveGameForLater":
                         handleSaveGameForLater();
                         break;
                     case "ChangeIsPlaying":
-                        //sender
+                        //sender+bool
                         changeIsPlaying(senderName, Boolean.parseBoolean(msgSplit[1]));
                         break;
-                     case "Record":
-                       
+                         case "playAgainReq":
+                        //sender+bool
+                        playAgainReq(senderName);
                         break;
+                     
 
                 }
            
@@ -122,13 +124,14 @@ public String msg;
      this.isPlaying=isplaying;
     }
 
-    public void startGame() {
-        
+    public void startGame(String senderName, String receverName) {
    
 
     }
 
-    public void updateGame(String index) {
+    public void updateGame(String senderName,String index) {
+        
+        
         
     }
 
@@ -156,6 +159,10 @@ public String msg;
     public void handleSaveGameForLater() {
       
         }
+
+    private void playAgainReq(String senderName) {
+       
+    }
 
 
  
