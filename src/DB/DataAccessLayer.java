@@ -18,7 +18,7 @@ public class DataAccessLayer {
     public static String CreatePlayer(Player player) throws SQLException {
         String res = "";
         try {
-            PreparedStatement con = connection.prepareStatement("INSERT INTO Players (name , password , score) VALUES (?  , ? , ?)", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement con = connection.prepareStatement("INSERT INTO Players (name , password , score) VALUES (?,?,?)", ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
             con.setString(1, player.getName());
             con.setString(2, player.getPassword());
             con.setInt(3, player.getScore());
@@ -70,7 +70,7 @@ public class DataAccessLayer {
 
             if (isExist) {
                 res = "true" + ";;" + rs.getString("name") + ";;" + rs.getInt("score");
-                PreparedStatement update = connection.prepareStatement("UPDATE players set status=TRUE WHERE name=? ");
+                PreparedStatement update = connection.prepareStatement("UPDATE players set status=TRUE WHERE name=?");
                 update.setString(1, name);
                 int updataNumber = update.executeUpdate();
                 System.out.println(updataNumber);
@@ -81,11 +81,11 @@ public class DataAccessLayer {
                         rs.getInt("score"));
 
             } else {
-                // if user don't exist
-                res = "false___notExist";
+            
+                res = "false;;notExist";
             }
         } catch (SQLException ex) {
-            res = "false___error";
+            res = "false;;error";
             System.out.println(ex);
         } finally {
             return res;
