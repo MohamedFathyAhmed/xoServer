@@ -36,7 +36,7 @@ public String msg;
                         break;
                     case "InvitaionTo":
                         //sender + rcever
-                        sendinvetationTo(msgSplit[1], msgSplit[2]);
+                        sendInvetationTo(msgSplit[1], msgSplit[2]);
                         break;
                     case "InvitaionResponse":
                         //sender + rcever + anwser
@@ -67,10 +67,13 @@ public String msg;
                      case "Record":
                        
                         break;
+<<<<<<< Updated upstream
 
+=======
+         
+>>>>>>> Stashed changes
                 }
-           
-
+     
     }
 
     public void signUp(String[] msg) {
@@ -128,30 +131,34 @@ public String msg;
 
     }
 
+<<<<<<< Updated upstream
     public void updateGame(String index) {
         
+=======
+    public void updateGame(String senderName,String index) {
+        
+  
+>>>>>>> Stashed changes
     }
 
 
-    public void sendinvetationTo( String senderName, String receverName) {
+    public void sendInvetationTo( String senderName, String receverName) {
  
-        System.out.println("InvetationFrom;;" + senderName + ";;" + receverName);
+        System.out.println("Invetation;;" + senderName + ";;" + receverName);
      
     }
 
-    public void sendResponseTo(String senderName, String receverName ,String resp) {
+    public void sendResponseTo(String senderName, String receverName ,String response) {
         
         
-        System.out.println("ResponsetoInvetation;;" + resp + ";;" + receverName);
+        System.out.println("Response;;" + response + ";;" + receverName);
       
-        if (resp.equals("yes")) {
+        if (response.equals("yes")) {
           //yes  
         }
         //no
       
     }
-
- 
 
     public void handleSaveGameForLater() {
       
