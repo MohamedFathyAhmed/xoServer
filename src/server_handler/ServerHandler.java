@@ -17,14 +17,16 @@ import java.util.logging.Logger;
  *
  * @author Marina
  */
-public class ServerHandler extends Thread{//implements Message{
+public class ServerHandler implements Runnable{//implements Message{
    private boolean isRunning;
-   private final ServerSocket serverSocket ;
+   private  ServerSocket serverSocket ;
    private final ErrorMessageSender errorMessageSender;
+   private int  portNumber;
    
     ServerHandler (int port,ErrorMessageSender errorMessageSender) throws IOException{
-        serverSocket=new ServerSocket(port);
+       
         this.errorMessageSender=errorMessageSender;
+        this.portNumber=port;
     }
  
 
@@ -33,11 +35,11 @@ public class ServerHandler extends Thread{//implements Message{
         while (isRunning) {
             try {
                 new ClientHandler(serverSocket.accept());
-               
             } catch (IOException ex) {
                 errorMessageSender.sendMessage(ex.getMessage());
                 try {
-                    close();
+                    disConnect();
+                    serverSocket=null;
                 } catch (IOException ex1) {
                    errorMessageSender.sendMessage(ex1.getMessage());
                 }
@@ -48,8 +50,13 @@ public class ServerHandler extends Thread{//implements Message{
     }
    
    
+    private void connect() throws IOException{
+        this.serverSocket=new ServerSocket(portNumber);
+        isRunning=true;
+        new Thread(this).start();
+    }
    
-    private void close() throws IOException{
+    private void disConnect() throws IOException{
         isRunning=false;
         serverSocket.close();
         
