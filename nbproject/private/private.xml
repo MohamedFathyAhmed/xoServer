@@ -7,5 +7,18 @@
             <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/DB/DataAccessLayer.java</file>
             <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/handler/ReqHandler.java</file>
         </group>
+        <group>
+            <file>file:/home/mohamed/tic%20tac%20toe/xoServer/src/xoserver/handlers/ErrorMessageSender.java</file>
+            <file>file:/home/mohamed/tic%20tac%20toe/xoServer/src/xoserver/handlers/ResponseReceiver.java</file>
+            <file>file:/home/mohamed/tic%20tac%20toe/xoServer/src/xoserver/handlers/Player.java</file>
+            <file>file:/home/mohamed/tic%20tac%20toe/xoServer/src/xoserver/handlers/ClientState.java</file>
+            <file>file:/home/mohamed/tic%20tac%20toe/xoServer/src/xoserver/handlers/ServerHandler.java</file>
+            <file>file:/home/mohamed/tic%20tac%20toe/xoServer/src/data/database/DataAccessLayer.java</file>
+            <file>file:/home/mohamed/tic%20tac%20toe/xoServer/src/xoserver/XoServer.java</file>
+            <file>file:/home/mohamed/tic%20tac%20toe/xoServer/src/xoserver/handlers/client/ClientHandler.java</file>
+            <file>file:/home/mohamed/tic%20tac%20toe/xoServer/src/xoserver/handlers/AuthRequestHandler.java</file>
+            <file>file:/home/mohamed/tic%20tac%20toe/xoServer/src/xoserver/ui/FXMLServerController.java</file>
+            <file>file:/home/mohamed/tic%20tac%20toe/xoServer/src/xoserver/handlers/DataRequestHandler.java</file>
+        </group>
     </open-files>
 </project-private>
