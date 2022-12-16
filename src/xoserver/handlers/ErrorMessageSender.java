@@ -7,10 +7,10 @@ package xoserver.handlers;
 
 /**
  *
- * @author mohamed
+ * @author Marina
  */
 @FunctionalInterface
-public interface ResponseReceiver {
-    
-    String sendData(String request);
+public interface ErrorMessageSender {
+
+    void sendMessage(String message);
 }

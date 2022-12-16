@@ -9,8 +9,7 @@ package xoserver.handlers;
  *
  * @author mohamed
  */
-@FunctionalInterface
-public interface ResponseReceiver {
+public class GameRequestHandler {
+
     
-    String sendData(String request);
 }

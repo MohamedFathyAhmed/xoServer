@@ -1,9 +1,10 @@
+package xoserver.handlers;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tictactoeserver.handlers;
+//package tictactoeserver.handlers;
 
 /**
  *
@@ -30,7 +31,7 @@ public class RequestHandlerSwitcher {
     }
 
     ResponseReceiver registerGameHandler() {
-
+        gameRequestHandler
     }
 
     void registerDetailsHandler(ResponseReceiver responseReceiver) {

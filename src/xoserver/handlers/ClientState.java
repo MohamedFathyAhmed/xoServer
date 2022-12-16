@@ -7,10 +7,8 @@ package xoserver.handlers;
 
 /**
  *
- * @author mohamed
+ * @author Apple
  */
-@FunctionalInterface
-public interface ResponseReceiver {
-    
-    String sendData(String request);
+public enum ClientState {
+    FREE,BUSY,GUEST
 }

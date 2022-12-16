@@ -9,8 +9,6 @@ package xoserver.handlers;
  *
  * @author mohamed
  */
-@FunctionalInterface
-public interface ResponseReceiver {
-    
-    String sendData(String request);
+enum GameShapes {
+    X,O
 }
