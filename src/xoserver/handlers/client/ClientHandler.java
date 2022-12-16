@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package xoserver.handlers;
+package xoserver.handlers.client;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -12,61 +12,62 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.util.Vector;
+import xoserver.handlers.ErrorMessageSender;
+import xoserver.handlers.RequestHandlerSwitcher;
+import xoserver.handlers.ResponseReceiver;
 
 /**
  *
- * @author mohamed
+ * @author Apple
  */
-public class ClientHanlder {
+public class ClientHandler {
 
-    private static final Vector<ClientHanlder> onlineClients = new Vector();
+    private static final Vector<ClientHandler> onlineClients = new Vector();
 
     private final StreamHandler streamHandler;
     private final ErrorMessageSender errorMessageSender;
-    private ResponseReceiver responseReceiver;
     private final Socket socket;
-    private ClientState state;
+    private final RequestHandlerSwitcher requestHandlerSwitcher;
+    private ResponseReceiver responseReceiver;
+    private xoserver.handlers.client.ClientState state;
     private String name;
 
-    public ClientHanlder(Socket socket, ErrorMessageSender errorMessageSender) throws IOException {
+    public ClientHandler(Socket socket, ErrorMessageSender errorMessageSender) throws IOException {
+        this.requestHandlerSwitcher = RequestHandlerSwitcher.getInstance();
         this.errorMessageSender = errorMessageSender;
         this.socket = socket;
-
+        responseReceiver = requestHandlerSwitcher.newAuthRequestHandler();
         streamHandler = new StreamHandler();
-        state = ClientState.GUEST;
+        state = xoserver.handlers.client.ClientState.GUEST;
         streamHandler.start();
         onlineClients.add(this);
     }
 
-    ResponseReceiver getInGame(ResponseReceiver responseReceiver) {
+    public ResponseReceiver getInGame(ResponseReceiver responseReceiver) {
         ResponseReceiver oldResponseReceiver = this.responseReceiver;
-        state = ClientState.BUSY;
+        state = xoserver.handlers.client.ClientState.BUSY;
         this.responseReceiver = responseReceiver;
         return oldResponseReceiver;
     }
 
-    void getOutOfGame(ResponseReceiver responseReceiver) {
+    public void getOutOfGame(ResponseReceiver responseReceiver) {
         this.responseReceiver = responseReceiver;
-        state = ClientState.FREE;
+        state = xoserver.handlers.client.ClientState.FREE;
     }
 
-    void loggedIn() {
-        state = ClientState.FREE;
+    void loggedIn(String name) {
+        this.name = name;
+        state = xoserver.handlers.client.ClientState.FREE;
+        responseReceiver = requestHandlerSwitcher.newDataRequestHandler();
     }
 
     void loggedOut() {
-        state = ClientState.GUEST;
+        this.name = "";
+        state = xoserver.handlers.client.ClientState.GUEST;
+        responseReceiver = requestHandlerSwitcher.newAuthRequestHandler();
     }
 
-    void setState(ClientState state) {
-        this.state = state;
-    }
-
-    public ClientState getState() {
-        return state;
-    }
-
-    public static Vector<ClientHanlder> getClientHanlders() {
+    public static Vector<ClientHandler> getClientHandlers() {
         return onlineClients;
     }
 
@@ -82,10 +83,10 @@ public class ClientHanlder {
         return responseReceiver;
     }
 
-    public static ClientHanlder getClientHanlderByName(String name) {
-        for (ClientHanlder clientHanlder : onlineClients) {
-            if (clientHanlder.getName().equals(name)) {
-                return clientHanlder;
+    public static ClientHandler getClientHandlerByName(String name) {
+        for (ClientHandler clientHandler : onlineClients) {
+            if (clientHandler.getName().equals(name)) {
+                return clientHandler;
             }
         }
         return null;
@@ -98,8 +99,8 @@ public class ClientHanlder {
     }
 
     void closeAll() throws IOException {
-        for (ClientHanlder clientHanlder : onlineClients) {
-            clientHanlder.close();
+        for (ClientHandler clientHandler : onlineClients) {
+            clientHandler.close();
         }
     }
 

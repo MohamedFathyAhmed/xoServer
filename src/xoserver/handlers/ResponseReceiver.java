@@ -13,4 +13,5 @@ package xoserver.handlers;
 public interface ResponseReceiver {
     
     String sendData(String request);
+
 }

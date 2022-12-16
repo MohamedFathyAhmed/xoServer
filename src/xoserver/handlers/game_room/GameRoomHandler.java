@@ -3,11 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package xoserver.handlers;
+package xoserver.handlers.game_room;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import xoserver.handlers.client.ClientHandler;
+import xoserver.handlers.ResponseReceiver;
 
 /**
  *
@@ -35,7 +37,7 @@ public class GameRoomHandler {
     private GameShapes player1Shape;
     private GameShapes player2Shape;
 
-    private GameRoomHandler(String sender, String receiver) {
+    public GameRoomHandler(String sender, String receiver) {
         this.player1Name = sender;
         this.player2Name = receiver;
 
@@ -49,8 +51,8 @@ public class GameRoomHandler {
             return handle(request);
         };
 
-        player1ResponseReceiver = ClientHanlder.getClientHanlderByName(player1Name).getInGame(gameRequestReceiver);
-        player2ResponseReceiver = ClientHanlder.getClientHanlderByName(player2Name).getInGame(gameRequestReceiver);
+        player1ResponseReceiver = ClientHandler.getClientHandlerByName(player1Name).getInGame(gameRequestReceiver);
+        player2ResponseReceiver = ClientHandler.getClientHandlerByName(player2Name).getInGame(gameRequestReceiver);
 
         gameRooms.add(this);
     }
@@ -92,8 +94,8 @@ public class GameRoomHandler {
     }
 
     private void leave() {
-        ClientHanlder.getClientHanlderByName(player1Name).getOutOfGame(player1ResponseReceiver);
-        ClientHanlder.getClientHanlderByName(player2Name).getOutOfGame(player2ResponseReceiver);
+        ClientHandler.getClientHandlerByName(player1Name).getOutOfGame(player1ResponseReceiver);
+        ClientHandler.getClientHandlerByName(player2Name).getOutOfGame(player2ResponseReceiver);
         gameRooms.remove(this);
     }
 

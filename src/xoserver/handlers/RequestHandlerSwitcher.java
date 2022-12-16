@@ -1,11 +1,13 @@
 package xoserver.handlers;
+
+import xoserver.handlers.game_room.GameRoomHandler;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 //package tictactoeserver.handlers;
-
 /**
  *
  * @author mohamed
@@ -13,10 +15,12 @@ package xoserver.handlers;
 public class RequestHandlerSwitcher {
 
     private static RequestHandlerSwitcher instance;
-    private final GameRequestHandler gameRequestHandler;
+    private final AuthRequestHandler authRequestHandler;
+    private final DataRequestHandler dataRequestHandler;
 
     private RequestHandlerSwitcher() {
-        gameRequestHandler = new GameRequestHandler();
+        authRequestHandler = new AuthRequestHandler();
+        dataRequestHandler = new DataRequestHandler();
     }
 
     public static RequestHandlerSwitcher getInstance() {
@@ -26,15 +30,15 @@ public class RequestHandlerSwitcher {
         return instance;
     }
 
-    void registerAuthHandler(ResponseReceiver responseReceiver) {
-
+    public void getInRoom(String sender, String receiver) {
+        new GameRoomHandler(sender, receiver);
     }
 
-    ResponseReceiver registerGameHandler() {
-        gameRequestHandler
+    public ResponseReceiver newAuthRequestHandler() {
+        return authRequestHandler.newResponseReceiver();
     }
 
-    void registerDetailsHandler(ResponseReceiver responseReceiver) {
-
+    public ResponseReceiver newDataRequestHandler() {
+        return dataRequestHandler.newResponseReceiver();
     }
 }

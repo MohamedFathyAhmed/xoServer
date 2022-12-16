@@ -1,6 +1,8 @@
-package DB;
+package data.database;
 
-import handler.Player;
+
+
+import xoserver.handlers.Player;
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

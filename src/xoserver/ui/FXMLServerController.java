@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
-package xoserver;
+package xoserver.ui;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -17,7 +17,7 @@ import javafx.scene.chart.PieChart;
  *
  * @author mo_fathy
  */
-public class UiServerController implements Initializable {
+public class FXMLServerController implements Initializable {
 
     @FXML
     private PieChart piechart;

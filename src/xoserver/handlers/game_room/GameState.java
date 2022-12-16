@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package server;
+package xoserver.handlers.game_room;
 
 /**
  *
- * @author Apple
+ * @author mohamed
  */
-public enum ClientState {
-    FREE,BUSY,GUEST
+public enum GameState {
+    ONGOING, PLAYER_ONE_WON, PLAYER_TWO_WON, DRAW
 }

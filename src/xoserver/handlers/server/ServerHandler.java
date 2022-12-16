@@ -3,17 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package xoserver.handlers;
+package xoserver.handlers.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import server.ClientHandler;
+import xoserver.handlers.client.ClientHandler;
+import xoserver.handlers.ErrorMessageSender;
 
 /**
  *
  * @author Marina
  */
-public class ServerHandler implements Runnable {//implements Message{
+public class ServerHandler implements Runnable {
 
     private boolean isRunning;
     private ServerSocket serverSocket;
@@ -21,7 +22,6 @@ public class ServerHandler implements Runnable {//implements Message{
     private int portNumber;
 
     ServerHandler(int port, ErrorMessageSender errorMessageSender) throws IOException {
-
         this.errorMessageSender = errorMessageSender;
         this.portNumber = port;
     }
@@ -30,7 +30,7 @@ public class ServerHandler implements Runnable {//implements Message{
     public void run() {
         while (isRunning) {
             try {
-                new ClientHandler(serverSocket.accept());
+                new ClientHandler(serverSocket.accept(), errorMessageSender);
             } catch (IOException ex) {
                 errorMessageSender.sendMessage(ex.getMessage());
                 try {
@@ -39,15 +39,13 @@ public class ServerHandler implements Runnable {//implements Message{
                 } catch (IOException ex1) {
                     errorMessageSender.sendMessage(ex1.getMessage());
                 }
-
             }
-
         }
     }
 
     private void connect() throws IOException {
-        this.serverSocket = new ServerSocket(portNumber);
         isRunning = true;
+        this.serverSocket = new ServerSocket(portNumber);
         new Thread(this).start();
     }
 
