@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.List;
+import xoserver.handlers.game_room.Play;
 
 /**
  *
@@ -36,6 +38,23 @@ public static boolean insertPlayer(String username, String password) {
         } catch (SQLException ex) {
             return false;
         }
+    }
+    public static void insertPlays(List<Play> plays, int gameId) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO PLAY "
+                + "(POSITION,PLAYER,GAME_ID) "
+                + "VALUES(?,?,?)");
+        for (Play play : plays) {
+            preparedStatement.setInt(1, play.getPosition());
+            preparedStatement.setString(2, play.getPlayer());
+            preparedStatement.setInt(3, gameId);
+            preparedStatement.execute();
+        }
+    }
+
+    public static int getPlayersCount() throws SQLException {
+        ResultSet playersCountResultSet = connection.createStatement().executeQuery("SELECT COUNT(*) FROM PLAYER");
+        playersCountResultSet.next();
+        return playersCountResultSet.getInt(1);
     }
 
 }
