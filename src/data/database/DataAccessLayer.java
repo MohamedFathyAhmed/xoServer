@@ -1,7 +1,6 @@
 package data.database;
 
-
-
+import data.database.models.Game;
 import xoserver.handlers.Player;
 import java.sql.SQLException;
 import java.sql.Connection;
@@ -19,7 +18,7 @@ public class DataAccessLayer {
     private static Connection connection;
     private static ResultSet record;
 
-public static boolean insertPlayer(String username, String password) {
+    public static boolean insertPlayer(String username, String password) {
         try {
             return !connection
                     .createStatement()
@@ -39,6 +38,7 @@ public static boolean insertPlayer(String username, String password) {
             return false;
         }
     }
+
     public static void insertPlays(List<Play> plays, int gameId) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO PLAY "
                 + "(POSITION,PLAYER,GAME_ID) "
@@ -57,4 +57,50 @@ public static boolean insertPlayer(String username, String password) {
         return playersCountResultSet.getInt(1);
     }
 
+    ////////////////////////////////////////////////////////////////marina
+    public static Game[] getGames() throws SQLException {
+        return getGamesFromResultSet(connection.createStatement()
+                .executeQuery("SELECT * FROM GAME"));
+
+    }
+
+    private static Game getGame(ResultSet gamesResultSet) throws SQLException {
+        Game game = new Game(gamesResultSet.getString("player_1"),
+                gamesResultSet.getString("player_2"),
+                gamesResultSet.getString("date"),
+                gamesResultSet.getString("won_player"),
+                gamesResultSet.getString("player1Shape"),
+                gamesResultSet.getString("player1Shape"));
+        return game;
+    }
+
+    private static int getGameHistoryCount() throws SQLException {
+        ResultSet gameCount = connection.createStatement().executeQuery("select count(*) count from GAME");
+        return gameCount.getInt("count");
+
+    }
+
+    public static Game[] getGamesFromResultSet(ResultSet gamesResultSet) throws SQLException {
+        Game[] gamesArray = new Game[getGameHistoryCount()];
+        int i = 0;
+        while (gamesResultSet.next()) {
+            gamesArray[i++] = getGame(gamesResultSet);
+        }
+        return gamesArray;
+    }
+
+    private static void setGame(Game game) throws SQLException {//id
+
+        connection.createStatement().execute("INSET INTO GAME (PLAYER_1,PLAYER_2,DATE,WON_PLAYER)VALUES('"
+                + game.getPlayer1()
+                + "','"
+                + game.getPlayer2()
+                + "','"
+                + game.getDate()
+                + "','"
+                + game.getWonPLayer()
+                + "');");
+
+    }
+///////////////////////////////////////////////
 }

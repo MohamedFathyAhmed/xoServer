@@ -1,5 +1,6 @@
 package xoserver.handlers;
 
+import java.io.IOException;
 import xoserver.handlers.game_room.GameRoomHandler;
 
 /*
@@ -10,7 +11,7 @@ import xoserver.handlers.game_room.GameRoomHandler;
 //package tictactoeserver.handlers;
 /**
  *
- * @author mohamed
+ * @author marina
  */
 public class RequestHandlerSwitcher {
 
@@ -30,7 +31,7 @@ public class RequestHandlerSwitcher {
         return instance;
     }
 
-    public void getInRoom(String sender, String receiver) {
+    public void getInRoom(String sender, String receiver) throws IOException {
         new GameRoomHandler(sender, receiver);
     }
 

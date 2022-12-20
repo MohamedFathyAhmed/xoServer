@@ -19,11 +19,11 @@ public class ServerHandler implements Runnable {
     private boolean isRunning;
     private ServerSocket serverSocket;
     private final ErrorMessageSender errorMessageSender;
-    private int portNumber;
+    private int port;
 
-    ServerHandler(int port, ErrorMessageSender errorMessageSender) throws IOException {
+    public ServerHandler(int port, ErrorMessageSender errorMessageSender) {
         this.errorMessageSender = errorMessageSender;
-        this.portNumber = port;
+        this.port = port;
     }
 
     @Override
@@ -34,8 +34,10 @@ public class ServerHandler implements Runnable {
             } catch (IOException ex) {
                 errorMessageSender.sendMessage(ex.getMessage());
                 try {
-                    disConnect();
-                    serverSocket = null;
+                    if (!isRunning) {
+                        disConnect();
+                        serverSocket = null;
+                    }
                 } catch (IOException ex1) {
                     errorMessageSender.sendMessage(ex1.getMessage());
                 }
@@ -43,16 +45,30 @@ public class ServerHandler implements Runnable {
         }
     }
 
-    private void connect() throws IOException {
+    public void connect() throws IOException {
         isRunning = true;
-        this.serverSocket = new ServerSocket(portNumber);
+        this.serverSocket = new ServerSocket(port);
         new Thread(this).start();
     }
 
-    private void disConnect() throws IOException {
-        isRunning = false;
-        serverSocket.close();
-
+    public void connect(int port) throws IOException {
+        this.port = port;
+        connect();
     }
 
+    public void toggleConnection() throws IOException {
+        if (isRunning) {
+            disConnect();
+        } else {
+            connect();
+        }
+    }
+
+    public void disConnect() throws IOException {
+        if (isRunning) {
+            isRunning = false;
+            ClientHandler.closeAll();
+            serverSocket.close();      
+        }
+    }
 }
