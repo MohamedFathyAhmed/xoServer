@@ -4,8 +4,6 @@
  */
 package xoserver.handlers.game_room;
 
-import java.util.function.Consumer;
-
 /**
  *
  * @author mohamed
