@@ -5,13 +5,15 @@
  */
 package xoserver.handlers;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import javafx.util.Pair;
+
 /**
  *
  * @author mohamed
  */
 @FunctionalInterface
 public interface ResponseReceiver {
-    
-    String sendData(String request);
-
+    String sendData(String name, String request) throws IOException, SQLException;
 }

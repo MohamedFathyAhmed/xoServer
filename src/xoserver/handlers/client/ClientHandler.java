@@ -5,13 +5,19 @@
  */
 package xoserver.handlers.client;
 
+import data.database.DataAccessLayer;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Vector;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import xoserver.handlers.ErrorMessageSender;
 import xoserver.handlers.RequestHandlerSwitcher;
 import xoserver.handlers.ResponseReceiver;
@@ -23,52 +29,99 @@ import xoserver.handlers.ResponseReceiver;
 public class ClientHandler {
 
     private static final Vector<ClientHandler> onlineClients = new Vector();
+    private static final Vector<ClientHandler> guestClients = new Vector();
+    private static final Vector<ClientHandler> inGameClients = new Vector();
+    private static final Vector<String> names = new Vector<>();
 
-    private final StreamHandler streamHandler;
-    private final ErrorMessageSender errorMessageSender;
-    private final Socket socket;
-    private final RequestHandlerSwitcher requestHandlerSwitcher;
+    private static Consumer<Integer> guestClientsUpdater;
+    private static Consumer<Integer> onlineClientsUpdater;
+    private static Consumer<Integer> inGameClientsUpdater;
+    private static Consumer<Integer> offlineClientsUpdater;
+
+    private StreamHandler streamHandler;
+    private ErrorMessageSender errorMessageSender;
+    private Socket socket;
+    private RequestHandlerSwitcher requestHandlerSwitcher;
+
     private ResponseReceiver responseReceiver;
-    private xoserver.handlers.client.ClientState state;
     private String name;
 
     public ClientHandler(Socket socket, ErrorMessageSender errorMessageSender) throws IOException {
+        this.socket = socket;
         this.requestHandlerSwitcher = RequestHandlerSwitcher.getInstance();
         this.errorMessageSender = errorMessageSender;
-        this.socket = socket;
         responseReceiver = requestHandlerSwitcher.newAuthRequestHandler();
         streamHandler = new StreamHandler();
-        state = xoserver.handlers.client.ClientState.GUEST;
+        names.add(((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress().getHostAddress());
         streamHandler.start();
-        onlineClients.add(this);
+        name = Thread.currentThread().getName();
+        guestClients.add(this);
+        updateClientsUpdater();
+        sendConnectedSuccessfully();
     }
 
-    public ResponseReceiver getInGame(ResponseReceiver responseReceiver) {
+    public static void setOnlineClientsUpdater(Consumer<Integer> onlineClientsUpdater) {
+        ClientHandler.onlineClientsUpdater = onlineClientsUpdater;
+    }
+
+    public static void setGuestClientsUpdater(Consumer<Integer> guestClientsUpdater) {
+        ClientHandler.guestClientsUpdater = guestClientsUpdater;
+    }
+
+    public static void setInGameClientsUpdater(Consumer<Integer> inGameClientsUpdater) {
+        ClientHandler.inGameClientsUpdater = inGameClientsUpdater;
+    }
+
+    public static void setOfflineClientsUpdater(Consumer<Integer> offlineClientsUpdater) {
+        ClientHandler.offlineClientsUpdater = offlineClientsUpdater;
+    }
+
+    private void sendConnectedSuccessfully() throws IOException {
+        streamHandler.write("connected;;true");
+    }
+
+    public ResponseReceiver getInGame(ResponseReceiver responseReceiver) throws IOException {
         ResponseReceiver oldResponseReceiver = this.responseReceiver;
-        state = xoserver.handlers.client.ClientState.BUSY;
+        inGameClients.add(this);
+        onlineClients.remove(this);
         this.responseReceiver = responseReceiver;
+        updateClientsUpdater();
         return oldResponseReceiver;
     }
 
-    public void getOutOfGame(ResponseReceiver responseReceiver) {
-        this.responseReceiver = responseReceiver;
-        state = xoserver.handlers.client.ClientState.FREE;
+    public void getOutOfGame() {
+        this.responseReceiver = requestHandlerSwitcher.newDataRequestHandler();
+        onlineClients.add(this);
+        inGameClients.remove(this);
+        updateClientsUpdater();
     }
 
-    void loggedIn(String name) {
+    public void loggedIn(String name) {
         this.name = name;
-        state = xoserver.handlers.client.ClientState.FREE;
         responseReceiver = requestHandlerSwitcher.newDataRequestHandler();
+        guestClients.remove(this);
+        onlineClients.add(this);
+        updateClientsUpdater();
     }
 
-    void loggedOut() {
-        this.name = "";
-        state = xoserver.handlers.client.ClientState.GUEST;
+    public void loggedOut() {
+        this.name = Thread.currentThread().getName();
         responseReceiver = requestHandlerSwitcher.newAuthRequestHandler();
+        onlineClients.remove(this);
+        guestClients.add(this);
+        updateClientsUpdater();
     }
 
-    public static Vector<ClientHandler> getClientHandlers() {
+    public static Vector<ClientHandler> getOnlineClientHandlers() {
         return onlineClients;
+    }
+
+    public static Vector<ClientHandler> getGuestClientHandlers() {
+        return guestClients;
+    }
+
+    public static Vector<ClientHandler> getInGameClientsHandlers() {
+        return inGameClients;
     }
 
     public String getName() {
@@ -83,7 +136,8 @@ public class ClientHandler {
         return responseReceiver;
     }
 
-    public static ClientHandler getClientHandlerByName(String name) {
+    public static ClientHandler getOnlineClientHandlerByName(String name) {
+        List<ClientHandler> onlineClients = ClientHandler.onlineClients;
         for (ClientHandler clientHandler : onlineClients) {
             if (clientHandler.getName().equals(name)) {
                 return clientHandler;
@@ -92,53 +146,128 @@ public class ClientHandler {
         return null;
     }
 
-    void close() throws IOException {
-        streamHandler.close();
-        socket.close();
-        onlineClients.remove(this);
+    public static ClientHandler getGuestClientHandlerByName(String name) {
+        for (ClientHandler clientHandler : guestClients) {
+            if (clientHandler.getName().equals(name)) {
+                return clientHandler;
+            }
+        }
+        return null;
     }
 
-    void closeAll() throws IOException {
+    public void request(String request) throws IOException {
+        streamHandler.write(request);
+    }
+
+    public static ClientHandler getInGameClientHandlerByName(String name) {
+        for (ClientHandler clientHandler : inGameClients) {
+            if (clientHandler.getName().equals(name)) {
+                return clientHandler;
+            }
+        }
+        return null;
+    }
+
+    void close() throws IOException {
+        socket.close();
+        streamHandler.close();
+        names.remove(socket.getInetAddress().getHostAddress());
+    }
+
+    public static void closeAll() throws IOException {
         for (ClientHandler clientHandler : onlineClients) {
             clientHandler.close();
         }
+
+        for (ClientHandler clientHandler : guestClients) {
+            clientHandler.close();
+        }
+
+        for (ClientHandler clientHandler : inGameClients) {
+            clientHandler.close();
+        }
+        names.clear();
+        onlineClients.clear();
+        guestClients.clear();
+        inGameClients.clear();
+        updateClientsUpdater();
+    }
+
+    public static void updateClientsUpdater() {
+        int playerCount = 0;
+        try {
+            playerCount = DataAccessLayer.getPlayersCount();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        guestClientsUpdater.accept(guestClients.size());
+        onlineClientsUpdater.accept(onlineClients.size());
+        inGameClientsUpdater.accept(inGameClients.size());
+        offlineClientsUpdater.accept(playerCount - (onlineClients.size() + inGameClients.size()));
+    }
+
+    public static boolean isClientLoggedIn(String name) {
+        for (String loggedInName : names) {
+            if (name.equals(loggedInName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private synchronized void removeClient() {
+        onlineClients.remove(this);
+        guestClients.remove(this);
+        inGameClients.remove(this);
     }
 
     class StreamHandler extends Thread {
 
         private final BufferedReader bufferedReader;
-        private final BufferedWriter bufferedWriter;
-        private boolean isRunning;
+        private final PrintWriter printWriter;
+        private boolean isRunning = true;
 
         public StreamHandler() throws IOException {
             bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+            printWriter = new PrintWriter(socket.getOutputStream(), true);
         }
 
         @Override
         public void run() {
             while (isRunning) {
                 try {
-                    write(responseReceiver.sendData(bufferedReader.readLine()));
+                    String response = bufferedReader.readLine();
+                    write(responseReceiver.sendData(name, response));
                 } catch (IOException ex) {
                     errorMessageSender.sendMessage(ex.getMessage());
+                    ex.printStackTrace();
+                } catch (NullPointerException ex1) {
+                    ex1.printStackTrace();
+                    errorMessageSender.sendMessage(ex1.getMessage());
                     try {
-                        close();
-                    } catch (IOException ex1) {
-                        errorMessageSender.sendMessage(ex1.getMessage());
+                        if (isRunning) {
+                            ClientHandler.this.close();
+                            removeClient();
+                            updateClientsUpdater();
+                        }
+                    } catch (IOException ex) {
+                        errorMessageSender.sendMessage(ex.getMessage());
                     }
+                } catch (SQLException ex) {
+                    Logger.getLogger(ClientHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }
 
         void write(String response) throws IOException {
-            bufferedWriter.write(response);
+            printWriter.println(response);
         }
 
         void close() throws IOException {
             isRunning = false;
+            printWriter.close();
             bufferedReader.close();
-            bufferedWriter.close();
         }
     }
 }

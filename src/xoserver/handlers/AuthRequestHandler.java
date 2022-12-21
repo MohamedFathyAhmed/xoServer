@@ -5,27 +5,56 @@
  */
 package xoserver.handlers;
 
+import data.database.DataAccessLayer;
+import xoserver.handlers.client.ClientHandler;
+
 /**
  *
  * @author mohamed
  */
-public class AuthRequestHandler {
-
-    private static AuthRequestHandler instance;
-
-    public AuthRequestHandler() {
-
-    }
+public class AuthRequestHandler extends RequestHandler {
 
     public ResponseReceiver newResponseReceiver() {
         return this::handle;
     }
 
-    public synchronized String handle(String request) {
-        switch (request) {
-            //handle me
+    public synchronized String handle(String name, String request) throws NullPointerException {
+        String[] splitedRequest = request.split(RequestType.MESSAGE_SPLITER);
+        String username = splitedRequest[1];
+        String password = splitedRequest[1];
+        boolean success = false;
+        String message;
+        switch (splitedRequest[0]) {
+
+            case RequestType.SIGNIN:
+                success = DataAccessLayer.login(username, password);
+                message = "username or password incorrect";
+                if (success) {
+                    message = "signin successfully";
+                    ClientHandler.getGuestClientHandlerByName(name).loggedIn(username);
+                }
+                return createSigninResponse(success, message);
+
+            case RequestType.SIGNUP:
+                success = DataAccessLayer.insertPlayer(username, password);
+                message = "username or password incorrect";
+                if (success) {
+                    message = "signin successfully";
+
+                    ClientHandler.getGuestClientHandlerByName(name).loggedIn(username);
+                }
+                return createSignupResponse(success, message);
 
         }
         return "";
     }
+
+    private String createSignupResponse(boolean success, String message) {
+        return createResponse(RequestType.SIGNUP, "" + success, message);
+    }
+
+    private String createSigninResponse(boolean success, String message) {
+        return createResponse(RequestType.SIGNIN, "" + success, message);
+    }
+
 }

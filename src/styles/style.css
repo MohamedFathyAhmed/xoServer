@@ -1,17 +1,20 @@
+.root{
+    -fx-background-color :   #0e2a3a;
+}
 .entry-btn
 {
--fx-background-color :   #4856cf;
--fx-background-radius :  20;
+    -fx-background-color :   #4856cf;
+    -fx-background-radius :  20;
 }
 .entry-btn:hover
 {
--fx-background-color : #538bd9 ;
--fx-background-radius :  20;
+    -fx-background-color : #538bd9 ;
+    -fx-background-radius :  20;
 }
 .entry-btn:pressed
 {
--fx-background-color : #3e97db ;
--fx-background-radius :  20;
+    -fx-background-color : #3e97db ;
+    -fx-background-radius :  20;
 }
 .WelcomePagePaneclass
 {
@@ -22,7 +25,7 @@
 
 .welcomePageCloseButtonClass
 {
--fx-background-color: #46cbfe;
+    -fx-background-color: #46cbfe;
 }
 .signInBack
 {
@@ -44,7 +47,7 @@
     -fx-background-color: transparent;
     -fx-border-width: 2px;
     -fx-text-fill:#21f9fb;
-    -fx-font-size: 14px;
+    -fx-font-size: 20px;
     -fx-background-radius: 20;
 }
 .specialButtons:hover
@@ -70,12 +73,12 @@
 .LeaderScrollVBox
 {
     -fx-background: transparent; 
-  
+
 }
 .text-area {
- -fx-background-color: #363350;
+    -fx-background-color: #363350;
     text-area-background:  #2d2a40 ;
-    
+
 
 }
 
@@ -83,7 +86,7 @@
     -fx-background-color: text-area-background ;
     -fx-border-color: #21f9fb;
     -fx-border-radius :  30;
-     -fx-font-size: 20px;
+    -fx-font-size: 20px;
 }
 .gameButtonsStyling
 {
@@ -92,5 +95,19 @@
     -fx-text-fill: #21f9fb;
     -fx-font-size: 45px;
     -fx-border-color: #21f9fb;
-     -fx-border-radius: 25px;
+    -fx-border-radius: 25px;
+}
+
+.chart-pie-label-line {
+    -fx-stroke: #8b4513;
+    -fx-fill: #ffffff;
+}
+
+.chart-pie-label {
+    -fx-fill: #ffffff;
+    -fx-font-size: 14px;
+} 
+.chart-legend {
+   -fx-background-color:  #fafad2;
+   -fx-stroke: #daa520;
 }
