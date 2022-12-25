@@ -43,10 +43,6 @@ public class FXMLServerController implements Initializable {
 
     private ObservableList<PieChart.Data> piechartData;
 
-    private Consumer<Integer> onlineClientsUpdater;
-    private Consumer<Integer> guestClientsUpdater;
-    private Consumer<Integer> inGameClientsUpdater;
-
     public FXMLServerController(Stage stage) {
         setupClientsUpdater();
 
@@ -79,7 +75,7 @@ public class FXMLServerController implements Initializable {
             ((Button) event.getSource()).setText(startButtonNames.get());
 
             serverHandler.toggleConnection();
-
+            portTextField.setVisible(!portTextField.visibleProperty().get());
             piechart.setVisible(!piechart.visibleProperty().get());
         } catch (IOException ex) {
             //catch me
