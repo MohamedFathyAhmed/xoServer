@@ -77,7 +77,7 @@ public class TicTacToeDatabase {
         connection.createStatement().execute(gameTable);
         connection.createStatement().execute(playTable);
         connection.commit();
-        connection.createStatement().execute("INSERT INTO PLAYER (NAME) VALUES ('EASY')");
+        connection.createStatement().execute("INSERT INTO PLAYER (NAME,PASSWORD) VALUES ('EASY','EASY')");
         connection.commit();
     }
 

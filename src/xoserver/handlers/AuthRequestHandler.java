@@ -29,7 +29,7 @@ public class AuthRequestHandler extends RequestHandler {
         switch (splitedRequest[0]) {
 
             case RequestType.SIGNIN:
-                success = DataAccessLayer.login(username, password);
+                success = !ClientHandler.isClientLoggedIn(username)&&DataAccessLayer.login(username, password);
                 message = "username or password incorrect";
                 if (success) {
                     message = "signin successfully";
