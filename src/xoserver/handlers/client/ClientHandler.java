@@ -102,9 +102,11 @@ public class ClientHandler {
         guestClients.remove(this);
         onlineClients.add(this);
         updateClientsUpdater();
+        names.add(name);
     }
 
     public void loggedOut() {
+        names.remove(name);
         this.name = Thread.currentThread().getName();
         responseReceiver = requestHandlerSwitcher.newAuthRequestHandler();
         onlineClients.remove(this);
@@ -169,9 +171,9 @@ public class ClientHandler {
     }
 
     void close() throws IOException {
+        names.remove(name);
         socket.close();
         streamHandler.close();
-        names.remove(socket.getInetAddress().getHostAddress());
     }
 
     public static void closeAll() throws IOException {

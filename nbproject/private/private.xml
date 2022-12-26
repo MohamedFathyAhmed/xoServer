@@ -7,6 +7,9 @@
             <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/DB/DataAccessLayer.java</file>
             <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/handler/ReqHandler.java</file>
         </group>
-        <group/>
+        <group>
+            <file>file:/media/mohamed/New%20Volume/xoServer/src/xoserver/handlers/AuthRequestHandler.java</file>
+            <file>file:/media/mohamed/New%20Volume/xoServer/src/data/database/DataAccessLayer.java</file>
+        </group>
     </open-files>
 </project-private>

@@ -9,8 +9,6 @@ import data.database.DataAccessLayer;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import xoserver.handlers.client.ClientHandler;
 import xoserver.handlers.game_room.GameRoomHandler;
 

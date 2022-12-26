@@ -10,9 +10,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Vector;
 import xoserver.handlers.RequestHandler;
 import xoserver.handlers.RequestType;
 import xoserver.handlers.client.ClientHandler;
@@ -47,7 +45,7 @@ public class GameRoomHandler extends RequestHandler {
         player2.getInGame(this::handle2);
     }
 
-    private String handle1(String name, String request) throws IOException, SQLException {
+    private String handle1(String name, String request) throws IOException, SQLException, NullPointerException {
         String[] splitedRequest = request.split(RequestType.MESSAGE_SPLITER);
         switch (splitedRequest[0]) {
             case RequestType.PLAY:
@@ -63,7 +61,7 @@ public class GameRoomHandler extends RequestHandler {
                         return gameDoneResponse1(gameState);
                 }
 
-             case RequestType.PLAY_AGAIN_ANSWER:
+            case RequestType.PLAY_AGAIN_ANSWER:
                 resetGame();
                 player2.request(createPlayAgainResponse());
                 return createPlayAgainResponse();
@@ -85,8 +83,13 @@ public class GameRoomHandler extends RequestHandler {
         return "";
     }
 
-    private String handle2(String name, String request) throws IOException, SQLException {
-        String[] splitedRequest = request.split(RequestType.MESSAGE_SPLITER);
+    private String handle2(String name, String request) throws IOException, SQLException, NullPointerException {
+        String[] splitedRequest;
+        try {
+            splitedRequest = request.split(RequestType.MESSAGE_SPLITER);
+        } catch (NullPointerException ex) {
+            splitedRequest = new String[]{RequestType.LEAVE};
+        }
         switch (splitedRequest[0]) {
             case RequestType.PLAY:
                 GameState gameState = updatePlayer2GameState(splitedRequest[1]);
@@ -115,7 +118,7 @@ public class GameRoomHandler extends RequestHandler {
 
             case RequestType.RECORD:
                 isRecording = !isRecording;
-                player2.request(createRecordingResponse(isRecording));
+                player1.request(createRecordingResponse(isRecording));
                 return createRecordingResponse(isRecording);
 
             case RequestType.LEAVE:
@@ -183,10 +186,15 @@ public class GameRoomHandler extends RequestHandler {
             case PLAYER_TWO_WON:
                 wonPlayer = player2.getName();
         }
-        int gameId = DataAccessLayer.insertGame(player1.getName(),
+        int gameId = DataAccessLayer.insertGame(
+                player1.getName(),
                 player2.getName(),
                 getCurrentDate(),
-                wonPlayer);
+                wonPlayer,
+                "X",
+                "O",
+                isRecording + ""
+        );
         if (isRecording) {
             DataAccessLayer.insertPlays(plays, gameId);
         }
@@ -248,7 +256,7 @@ public class GameRoomHandler extends RequestHandler {
     }
 
     private String createRecordingResponse(boolean recording) {
-        return createResponse(RequestType.LEAVE, recording + "");
+        return createResponse(RequestType.RECORD, recording + "");
     }
 
 }

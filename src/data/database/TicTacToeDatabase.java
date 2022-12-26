@@ -17,7 +17,7 @@ public class TicTacToeDatabase {
             + " PLAYER_1_SHAPE VARCHAR(1) NOT NULL, "
             + " PLAYER_2_SHAPE VARCHAR(1) NOT NULL, "
             + " DATE DATE NOT NULL, "
-            + " WON_PLAYER VARCHAR(50) NOT NULL, "
+            + " WON_PLAYER VARCHAR(50) , "
             + " RECORDED BOOLEAN NOT NULL,"
             + " FOREIGN KEY (PLAYER_1) REFERENCES PLAYER(NAME), "
             + " FOREIGN KEY (PLAYER_2) REFERENCES PLAYER(NAME), "

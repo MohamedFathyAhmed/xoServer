@@ -23,7 +23,7 @@ public class AuthRequestHandler extends RequestHandler {
     public synchronized String handle(String name, String request) throws NullPointerException {
         String[] splitedRequest = request.split(RequestType.MESSAGE_SPLITER);
         String username = splitedRequest[1];
-        String password = splitedRequest[1];
+        String password = splitedRequest[2];
         boolean success = false;
         String message;
         switch (splitedRequest[0]) {

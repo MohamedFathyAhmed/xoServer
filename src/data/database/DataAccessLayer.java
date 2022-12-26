@@ -41,15 +41,31 @@ public class DataAccessLayer {
     }
 
     //mohamed ibrahim
-    public static int insertGame(String player1, String player2, String date, String wonPlayer) throws SQLException {
+    public static int insertGame(
+            String player1,
+            String player2,
+            String date,
+            String wonPlayer,
+            String player1Shape,
+            String player2Shape,
+            String recorded) throws SQLException {
         PreparedStatement preparedStatement = connection
                 .prepareStatement("INSERT INTO GAME "
-                        + "(PLAYER_1,PLAYER_2,DATE,WON_PLAYER)"
-                        + " VALUES(?,?,?,?)");
+                        + "(PLAYER_1,"
+                        + "PLAYER_2,"
+                        + "DATE,"
+                        + "WON_PLAYER,"
+                        + "PLAYER_1_SHAPE,"
+                        + "PLAYER_2_SHAPE,"
+                        + "RECORDED)"
+                        + " VALUES(?,?,?,?,?,?,?)");
         preparedStatement.setString(1, player1);
         preparedStatement.setString(2, player2);
         preparedStatement.setString(3, date);
         preparedStatement.setString(4, wonPlayer);
+        preparedStatement.setString(5, player1Shape);
+        preparedStatement.setString(6, player2Shape);
+        preparedStatement.setString(7, recorded);
         preparedStatement.execute();
         //
         ResultSet idResultSet = connection.createStatement().executeQuery("SELECT ID FROM GAME ORDER BY ID DESC FETCH FIRST 1 ROWS ONLY");
@@ -81,17 +97,35 @@ public class DataAccessLayer {
                         + " WHERE PLAYER_1='" + name + "' OR PLAYER_2='" + name + "'");
         String gamesString = "";
         while (gamesResultSet.next()) {
+            /*
+              String id,
+            String player1,
+            String player2,
+            String date,
+            String isRecorded,
+            String wonPLayer,
+            String player1Shape,
+            String player2Shape
+            
+            
+            
+             */
+
             gamesString += gamesResultSet.getInt("ID")
                     + "~"
                     + gamesResultSet.getString("PLAYER_1")
                     + "~"
                     + gamesResultSet.getString("PLAYER_2")
                     + "~"
-                    + gamesResultSet.getString("WON_PLAYER")
-                    + "~"
                     + gamesResultSet.getString("DATE")
                     + "~"
                     + gamesResultSet.getString("RECORDED")
+                    + "~"
+                    + gamesResultSet.getString("WON_PLAYER")
+                    + "~"
+                    + gamesResultSet.getString("PLAYER_1_SHAPE")
+                    + "~"
+                    + gamesResultSet.getString("PLAYER_2_SHAPE")
                     + "~~";
         }
         return gamesString;
@@ -100,14 +134,12 @@ public class DataAccessLayer {
     public static String getGamePlays(int gameId) throws SQLException {
         ResultSet playesResultSet = connection.createStatement()
                 .executeQuery("SELECT * FROM PLAY"
-                        + " WHERE GAME_ID='" + gameId + "'");
+                        + " WHERE GAME_ID=" + gameId + " ORDER BY ID");
         String gamesString = "";
         while (playesResultSet.next()) {
-            gamesString += playesResultSet.getInt("ID")
+            gamesString +=playesResultSet.getString("POSITION")
                     + "~"
                     + playesResultSet.getString("PLAYER")
-                    + "~"
-                    + playesResultSet.getString("POSITION")
                     + "~~";
         }
         return gamesString;
