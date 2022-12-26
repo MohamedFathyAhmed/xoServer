@@ -2,14 +2,27 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group name="Group">
-            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/handler/Player.java</file>
-            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/DB/DataAccessLayer.java</file>
-            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/handler/ReqHandler.java</file>
-        </group>
         <group>
             <file>file:/media/mohamed/New%20Volume/xoServer/src/xoserver/handlers/AuthRequestHandler.java</file>
             <file>file:/media/mohamed/New%20Volume/xoServer/src/data/database/DataAccessLayer.java</file>
+        </group>
+        <group name="Group">
+            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/xoserver/handlers/game_room/GameHandler.java</file>
+            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/xoserver/handlers/RequestHandler.java</file>
+            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/xoserver/handlers/game_room/GameShapes.java</file>
+            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/xoserver/handlers/RequestHandlerSwitcher.java</file>
+            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/xoserver/handlers/ErrorMessageSender.java</file>
+            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/xoserver/handlers/Requesconstants.java</file>
+            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/xoserver/handlers/ResponseReceiver.java</file>
+            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/xoserver/handlers/game_room/Play.java</file>
+            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/xoserver/handlers/server/ServerHandler.java</file>
+            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/data/database/DataAccessLayer.java</file>
+            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/xoserver/handlers/DataRequestHandler.java</file>
+            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/xoserver/handlers/game_room/GameRoomHandler.java</file>
+            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/data/database/TicTacToeDatabase.java</file>
+            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/xoserver/handlers/game_room/GameState.java</file>
+            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/xoserver/handlers/AuthRequestHandler.java</file>
+            <file>file:/Users/mo_fathy/Documents/GitHub/xoServer/src/xoserver/handlers/client/ClientHandler.java</file>
         </group>
     </open-files>
 </project-private>
