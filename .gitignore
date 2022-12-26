@@ -28,5 +28,5 @@ nbproject/private
 
 /build/
 /dist/
-/tic_tac_toe
-/server_tic_tac_toe_db
+/tic_tac_toe/
+/server_tic_tac_toe_db/
